@@ -1,15 +1,16 @@
 package br.com.fiap.cashflowpro.model;
 
-import java.util.Random;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.Data;
 
-public record Categoria(Long id, String nome, String icone) {
-    //imutável
+@Data
+@Entity
+public class Categoria {
 
-    public Categoria(Long id, String nome, String icone){
-        var key = (id != null) ? id : Math.abs( new Random().nextLong() );
-        this.id = key;  
-        this.nome = nome;  
-        this.icone = icone;  
-    }
+    @Id
+    private Long id;
+    private String nome;
+    private String icone;
  
 }
