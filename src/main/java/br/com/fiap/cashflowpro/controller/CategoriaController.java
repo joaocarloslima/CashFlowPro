@@ -54,22 +54,9 @@ public class CategoriaController {
                     .map(ResponseEntity::ok) //reference method
                     .orElse(ResponseEntity.notFound().build());
 
-        // var categoria = repository.findById(id);
-
-        // if (categoria.isEmpty()) {
-        //     return ResponseEntity.notFound().build();
-        // }
-
-        // return ResponseEntity.ok(categoria.get());
     }
 
-    // private Optional<Categoria> getCategoriaById(Long id) {
-    //     var categoria = repository
-    //             .stream()
-    //             .filter(c -> c.id().equals(id))
-    //             .findFirst();
-    //     return categoria;
-    // }
+
 
     @DeleteMapping("{id}")
     @ResponseStatus(NO_CONTENT)
