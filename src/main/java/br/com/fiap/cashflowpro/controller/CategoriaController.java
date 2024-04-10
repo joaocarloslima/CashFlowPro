@@ -7,8 +7,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 import java.util.List;
 
-import org.springframework.ai.openai.OpenAiChatClient;
-import org.springframework.beans.BeanUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,8 +34,6 @@ public class CategoriaController {
     @Autowired // CDI - Injeção de Dependência
     CategoriaRepository repository;
 
-    @Autowired
-    OpenAiChatClient gpt;
 
     @GetMapping
     public List<Categoria> index() {
@@ -47,8 +44,6 @@ public class CategoriaController {
     @ResponseStatus(CREATED)
     public Categoria create(@RequestBody @Valid Categoria categoria) {
         log.info("cadastrando categoria: {}", categoria);
-        String icone = gpt.call("Sugira um icone do Material Icons para uma categoria chamada " + categoria.getNome() + ". Responde apenas com o nome do icone");
-        categoria.setIcone(icone);
         return repository.save(categoria);
     }
 
