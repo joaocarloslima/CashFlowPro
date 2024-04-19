@@ -5,6 +5,10 @@ import static org.springframework.http.HttpStatus.CREATED;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,25 +31,26 @@ public class MovimentacaoController {
     MovimentacaoRepository repository;
 
     @GetMapping
-    public List<Movimentacao> index(
+    public Page<Movimentacao> index(
             @RequestParam(required = false) String categoria,
-            @RequestParam(required = false) Integer mes
+            @RequestParam(required = false) Integer mes,
+            @PageableDefault(size = 5, sort = "data", direction = Direction.DESC) Pageable pageable
         ){
 
         if(categoria != null && mes != null){
-            return repository.findByCategoriaNomeAndMes(categoria, mes);
+            return repository.findByCategoriaNomeAndMes(categoria, mes, pageable);
         }
 
         if (categoria != null){
-            return repository.findByCategoriaNome(categoria);
+            return repository.findByCategoriaNome(categoria, pageable);
         }
 
         if(mes != null){
-            return repository.findByMes(mes);
+            return repository.findByMes(mes, pageable);
         }
 
         log.info(categoria);
-        return repository.findAll();
+        return repository.findAll(pageable);
     }
 
     @PostMapping
