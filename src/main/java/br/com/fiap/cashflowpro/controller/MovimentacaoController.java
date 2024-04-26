@@ -58,5 +58,23 @@ public class MovimentacaoController {
     public Movimentacao create(@RequestBody @Valid Movimentacao movimentacao){
         return repository.save(movimentacao);
     }
+
+    @GetMapping("menor")
+    public Movimentacao menor( @PageableDefault(size = 1, sort = "valor") Pageable pageable){
+        var page = repository.findAll(pageable);
+        return page.getContent().get(0);
+    }
+
+    @GetMapping("maior")
+    public Movimentacao maior() {
+        return repository.getMaior();
+    }
+
+    @GetMapping("ultima")
+    public Movimentacao ultima(){
+        return repository.getUltima();
+    }
+    
+
     
 }
