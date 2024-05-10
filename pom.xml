@@ -38,6 +38,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 		
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -62,6 +67,12 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.5.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+		</dependency>
+
 
 		
 	</dependencies>
@@ -103,6 +114,13 @@
             <type>pom</type>
             <scope>import</scope>
         </dependency>
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-dependencies</artifactId>
+			<version>3.2.3</version>
+			<type>pom</type>
+			<scope>import</scope>
+      </dependency>
     </dependencies>
 </dependencyManagement>
 

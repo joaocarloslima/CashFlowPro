@@ -2,7 +2,10 @@ package br.com.fiap.cashflowpro.controller;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("movimentacao")
 @Slf4j
 public class MovimentacaoController {
+
+    record TotalPorCategoria (String categoria, BigDecimal valor){}
+    record TotalPorMes(String mes, BigDecimal receita, BigDecimal despesa) {}
 
     @Autowired
     MovimentacaoRepository repository;
@@ -74,7 +80,57 @@ public class MovimentacaoController {
     public Movimentacao ultima(){
         return repository.getUltima();
     }
-    
+
+    @GetMapping("totais-por-categoria")
+    public List<TotalPorCategoria> getTotalPorCategoria(){
+        var movimentacoes = repository.findAll();
+
+        Map<String, BigDecimal> collect = movimentacoes.stream()
+            .collect( Collectors.groupingBy( 
+                m -> m.getCategoria().getNome(),
+                Collectors.reducing(BigDecimal.ZERO, Movimentacao::getValor, BigDecimal::add)
+            ));
+
+        return collect
+            .entrySet()
+            .stream()
+            .map( e -> new TotalPorCategoria(e.getKey(), e.getValue()))
+            .toList();
+       
+    }
+
+    @GetMapping("totais-por-mes")
+    public List<TotalPorMes> getTotaisPorMes(){
+        var movimentacao = repository.findAll();
+
+        Map<String, BigDecimal> totaisReceitas = movimentacao.stream()
+            .filter( m -> m.getTipo().equals("RECEITA"))
+            .collect(
+                Collectors.groupingBy(
+                    m -> m.getData().getMonth().toString(),
+                    Collectors.reducing(BigDecimal.ZERO, Movimentacao::getValor, BigDecimal::add)
+                )
+            );
+
+        Map<String, BigDecimal> totaisDespesas = movimentacao.stream()
+            .filter( m -> m.getTipo().equals("DESPESA"))
+            .collect(
+                Collectors.groupingBy(
+                    m -> m.getData().getMonth().toString(),
+                    Collectors.reducing(BigDecimal.ZERO, Movimentacao::getValor, BigDecimal::add)
+                )
+            );
+
+        return totaisDespesas
+            .keySet()
+            .stream()
+            .map(mes -> new TotalPorMes(
+                mes,
+                totaisReceitas.getOrDefault(mes, BigDecimal.ZERO),
+                totaisDespesas.getOrDefault(mes, BigDecimal.ZERO)
+            ))
+            .toList();
+    }    
 
     
 }
