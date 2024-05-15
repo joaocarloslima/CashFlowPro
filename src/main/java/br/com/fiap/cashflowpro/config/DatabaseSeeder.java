@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import br.com.fiap.cashflowpro.model.Categoria;
 import br.com.fiap.cashflowpro.model.Movimentacao;
@@ -16,6 +17,7 @@ import br.com.fiap.cashflowpro.repository.CategoriaRepository;
 import br.com.fiap.cashflowpro.repository.MovimentacaoRepository;
 
 @Configuration
+@Profile("dev")
 public class DatabaseSeeder implements CommandLineRunner {
 
     @Autowired
